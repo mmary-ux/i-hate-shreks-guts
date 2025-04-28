@@ -8,24 +8,22 @@ public class UIManipulation : MonoBehaviour
 
     private bool isPaused;
 
-    private void Start()
-    {
-        FindObjectOfType<AudioManager>().Play("MainTheme");
-    }
     private void Update()
     {
         if(Input.GetKeyUp(KeyCode.Escape))
         {
-            if(isPaused)
+            if(!isPaused && !DeathScreen.activeSelf)
+            {
+                isPaused = true;
+                Cursor.lockState = CursorLockMode.Confined;
+                PauseMenu.SetActive(true);
+                Time.timeScale = 0f;
+            }
+            else if(isPaused && !DeathScreen.activeSelf)
             {
                 isPaused = false;
                 RestartSequence();
-            }
-            else
-            {
-                isPaused = true;
-                PauseMenu.SetActive(true);
-                Time.timeScale = 0f;
+                Cursor.lockState = CursorLockMode.Locked;
             }
         }
     }
