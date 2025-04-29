@@ -1,58 +1,43 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-public enum EnemyState { Patrol, Chase, Attack }
-
-public class EnemyStateMachine : MonoBehaviour // Машина не должна знать о состояниях
+public class EnemyStateMachine : MonoBehaviour
 {
-    public EnemyState currentState { get; private set; }
-    public GameObject currentEnemy { get; private set; }
-
-    private PatrolState patrolState;
-    private ChaseState chaseState;
-    private AttackState attackState;
-
-    private NavMeshAgent navMeshAgent;
-    private Animator animator;
-    private EnemySettings settings;
+    public AbstractEnemyState CurrentState { get; protected set; }
+    public GameObject Enemy { get; private set; }
+    public UnityEngine.AI.NavMeshAgent Agent { get; private set; }
+    public Animator Animator { get; private set; }
+    public EnemySettings Settings { get; private set; }
+    public EnemyVision Vision { get; private set; }
+    public EnemyHealth Health { get; private set; }
+    public bool IsPeacefulMode { get; set; }
 
     private void Awake()
     {
-        currentEnemy = gameObject;
+        Enemy = gameObject;
+        Agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        Animator = GetComponent<Animator>();
+        Settings = GetComponent<EnemyAI>().settings;
+        Vision = GetComponent<EnemyVision>();
+        Health = GetComponent<EnemyHealth>();
 
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>();
-        settings = GetComponent<EnemyAI>().settings;
-
-        patrolState = new PatrolState(this, navMeshAgent, animator, settings);
-        chaseState = new ChaseState(this, navMeshAgent, animator, settings);
-        attackState = new AttackState(this, navMeshAgent, animator, settings);
-
-        SetState(EnemyState.Patrol);
-    }
-
-    public void SetState(EnemyState newState)
-    {
-        currentState = newState;
-
-        switch (newState)
-        {
-            case EnemyState.Patrol: patrolState.Enter(); break;
-            case EnemyState.Chase: chaseState.Enter(); break;
-            case EnemyState.Attack: attackState.Enter(); break;
-        }
+        ChangeState(new IdleState(this));
     }
 
     private void Update()
     {
-        switch (currentState)
-        {
-            case EnemyState.Patrol: patrolState.Update(); break;
-            case EnemyState.Chase: chaseState.Update(); break;
-            case EnemyState.Attack: attackState.Update(); break;
-        }
+        CurrentState?.LogicUpdate();
+        CurrentState?.AnimationUpdate();
+    }
+
+    private void FixedUpdate()
+    {
+        CurrentState?.PhysicsUpdate();
+    }
+
+    public void ChangeState(AbstractEnemyState newState)
+    {
+        CurrentState?.Exit();
+        CurrentState = newState;
+        newState.Enter();
     }
 }

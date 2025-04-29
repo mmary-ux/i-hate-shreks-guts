@@ -4,7 +4,7 @@ using System.IO;
 
 public class RTTSave : MonoBehaviour {
 	
-	private static int PIC_WIDTH = 256;
+	//private static int PIC_WIDTH = 256;
 	public RenderTexture RTTTex;
 
 	// Use this for initialization

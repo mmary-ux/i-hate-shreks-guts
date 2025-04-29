@@ -1,0 +1,215 @@
+// 4. Машина состояний
+// 4.1. Что это?
+// Машина состояний эта абстракция которая собирает в себе набор состояний,
+// переходов между ними и всего необходимого "Состояния" системы для того, чтобы
+// выбирать тот или иной переход.
+// Машина состояний является своего рода интерфейсом, на основе которого могут быть
+// реализованы различные наборы правил перехода между состояниями, а так же
+// поведение во время каждого состояния.
+// 4.2. Пример машины состояний для игрового босса.
+// Предположим мы разрабатываем RPG в которой необходимо драться с мобами и
+// боссами.
+// Босс будет иметь 4 состояния, которые чередуются по определенному правилу, а так
+// же 2 стадии, которые будут отличаться одной атакой, а так же скоростью
+// передвижения и анимации атак.
+// Сначала определим абстрактный класс состояния босса
+
+public abstract class AbstractBossFightState
+{
+    protected BossFightStateMachine _stateMachine;
+
+    public AbstractBossFightState(BossFightStateMachine stateMachine)
+    {
+        _stateMachine = stateMachine;
+    }
+    
+    public virtual void Enter() { }
+    public virtual void Exit() { }
+    public abstract void AnimationUpdate();
+    public abstract void PhysicsUpdate();
+    public abstract void LogicUpdate();
+}
+
+// Функции Enter и Exit отвечают за действия при входе и выходе из конкретного
+// состояния и будут вызываться машиной автоматически при смене состояния.
+// Функциям AnimationUpdate и PhysicsUpdate объект босса будет делегировать
+// управление своими движениями и анимациями, а LogicUpdate управление
+// поведением и переключение состояний.
+// Определим контекст нашего босса
+
+public class EnemyBoss
+{
+    publicAnimator Animator { get; protected set; }
+    privateBossFightStateMachine? _stateMachine;
+    public EnemyBoss(Animator animator)
+    {
+        Animator = animator;
+    }
+    public void SetFightStateMachine(BossFightStateMachine fightSM)
+    {
+        _stateMachine = fightSM;
+        _stateMachine.Initialize(this);
+    }
+    public void Update()
+    {
+        _stateMachine?.CurrentState.LogicUpdate();
+        _stateMachine?.CurrentState.AnimationUpdate();
+    }
+    public void FixedUpdate()
+    {
+        _stateMachine?.CurrentState.PhysicsUpdate();
+    }
+    public void Say(string message)
+    {
+        Console.WriteLine($"Босс говорит: \"{message}\"");
+    }
+    public bool IsPlayerInView()
+    {
+        var rnd = newRandom();
+        if(rnd.Next(10) > 5) return true;
+        return false;
+    }
+    public bool IsPlayerNear()
+    {
+        var rnd = newRandom();
+        if(rnd.Next(10) > 7) return true;
+        return false;
+    }
+}
+
+// При обновлении он будет вызывать обновлению логики конкретного состояния, и
+// обновление анимации.
+// При фиксированном обновлении будет вызываться обновление физики для
+// конкретного состояния.
+// Определим состояния первой стадии нашего босса
+
+public class StayState : AbstractBossFightState
+{
+    publicStayState(BossFightStateMachine stateMachine) : base(stateMachine);
+
+    public override void AnimationUpdate()
+    {
+        _stateMachine.Boss.Animator.SetAnimation("Stay");
+    }
+
+    public override void PhysicsUpdate()
+    {
+        Console.WriteLine("Обновление физики для состояния: \"Стоит\"");
+    }
+
+    public override void LogicUpdate()
+    {
+        if(_stateMachine.Boss.IsPlayerInView())
+        {
+            _stateMachine.ChangeState(new AggresiveState(_stateMachine));
+        }
+    }
+}
+
+public class AggresiveState : AbstractBossFightState
+{
+    privatebool playerLost;
+    publicAggresiveState(BossFightStateMachine stateMachine) : base(stateMachine)
+
+    public override void Enter()
+    {
+        _stateMachine.Boss.Say("Я вижу тебя! Ха-Ха-Ха-Ха");
+        playerLost = false;
+    }
+
+    public override void AnimationUpdate()
+    {
+        _stateMachine.Boss.Animator.SetAnimation("Ходьба");
+    }
+    public override void PhysicsUpdate()
+    {
+        Console.WriteLine("Обновление физики состояния 'Идет к игроку'");
+    }
+    public override void Exit()
+    {
+        if (playerLost)
+        {
+            _stateMachine.Boss.Say("Черт! Куда он делася?");
+        }
+    }
+
+    public override void LogicUpdate()
+    {
+        if(_stateMachine.Boss.IsPlayerNear())
+        {
+            _stateMachine.ChangeState(new AttackState(_stateMachine));
+        }
+        else if(_stateMachine.Boss.IsPlayerInView())
+        {
+            playerLost =true;
+            _stateMachine.ChangeState(newStayState(_stateMachine));
+        }
+    }
+}
+
+public classAttackState : AbstractBossFightState
+{
+    public AttackState(BossFightStateMachine stateMachine) : base(stateMachine)
+    public override void Enter()
+    {
+        _stateMachine.Boss.Say("Тебе конец!'");
+    }
+    public override void AnimationUpdate()
+    {
+        _stateMachine.Boss.Animator.SetAnimation("Удар");
+    }
+    public overridevoidPhysicsUpdate()
+    {
+        Console.WriteLine("Обновление физики состояния 'Босс атакует'");
+    }
+    public overridevoidLogicUpdate()
+    {
+        _stateMachine.ChangeState(new AggresiveState(_stateMachine));
+    }
+}
+
+// Далее определим стейт машину для первой стадии босса
+
+public class BossFightStateMachine
+{
+    public AbstractBossFightState CurrentState { get; protected set; }
+    publicfloat SpeedFactor { get; protected set; }
+    public EnemyBoss Boss { get; private set; }
+
+    public BossFightStateMachine(EnemyBoss boss)
+    {
+        SpeedFactor = 1f;
+        CurrentState = newStayState(this);
+        Boss = boss;
+    }
+    public virtual void Initialize(EnemyBoss boss)
+    {
+        CurrentState.Enter();
+    }
+    public virtual void ChangeState(AbstractBossFightState newState)
+    {
+        CurrentState.Exit();
+        CurrentState = newState;
+        newState.Enter();
+    }
+}
+
+// При инициализации машина будет вызывать вход в состояние "Cтоит"
+// Для демонстрации соберем все вместе
+
+public classProgram
+{
+    public static voidMain()
+    {
+        Animator animator = new Animator();
+        EnemyBoss boss = newEnemyBoss(animator);
+        BossFightStateMachine stateMachine = newBossFightStateMachine(boss)
+        boss.SetFightStateMachine(stateMachine);
+        while(true)
+        {
+            Thread.Sleep(1000);
+            boss.Update();
+            boss.FixedUpdate();
+        }
+    }
+}

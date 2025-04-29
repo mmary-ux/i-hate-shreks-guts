@@ -1,12 +1,9 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
-    [SerializeField] private int maxHealth = 30;
+    public int maxHealth = 30;
     public int currentHealth;
     public Slider healthSlider; // Ссылка на UI Slider
 
@@ -15,9 +12,14 @@ public class EnemyHealth : MonoBehaviour
     private EnemyStateMachine stateMachine;
     public bool isDead = false;
 
-    void Start()
+    private void Awake() 
     {
-        if(isDead) { gameObject.SetActive(false); return; }
+        stateMachine = GetComponent<EnemyStateMachine>();
+    }
+
+    private void Start()
+    {
+        if (isDead) { gameObject.SetActive(false); return; }
         stateMachine = GetComponent<EnemyStateMachine>();
         currentHealth = maxHealth;
         if (healthSlider != null)
@@ -27,25 +29,36 @@ public class EnemyHealth : MonoBehaviour
         UpdateHealthUI();
     }
 
-
     public void TakeDamage(int damage)
     {
+        if (isDead) return;
         animator.SetTrigger("IsHit");
         currentHealth -= damage;
         currentHealth = Mathf.Max(currentHealth, 0);
         UpdateHealthUI();
         if (currentHealth <= 0) Die();
-        else stateMachine.SetState(EnemyState.Chase);
+        else 
+        {
+            if (!stateMachine.IsPeacefulMode)
+            {
+                stateMachine.ChangeState(new AggressiveState(stateMachine));
+            }
+            else if (currentHealth <= maxHealth * 0.3f)
+            {
+                stateMachine.ChangeState(new FleeState(stateMachine));
+            }
+        }
     }
 
     private void Die()
     {
+        if (isDead) return;
+        isDead = true;
         animator.SetTrigger("IsDead");
         CallAfterDelay.Create(3f, () =>
         {
             gameObject.SetActive(false);
         });
-        isDead = true;
     }
 
     public void UpdateHealthUI()
