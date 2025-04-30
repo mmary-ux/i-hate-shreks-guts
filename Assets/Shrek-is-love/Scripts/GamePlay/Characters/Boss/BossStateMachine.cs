@@ -9,7 +9,7 @@ public class BossStateMachine : MonoBehaviour
     public BossVision Vision { get; private set; }
     public BossHealth Health { get; private set; }
     public BossMana Mana { get; private set; }
-
+    public bool IsPeacefulMode { get; set; }
     public GameObject UIStatistics;
 
     private void Awake()
@@ -20,6 +20,8 @@ public class BossStateMachine : MonoBehaviour
         Vision = GetComponent<BossVision>();
         Health = GetComponent<BossHealth>();
         Mana = GetComponent<BossMana>();
+
+        ChangeState(new BossIdleState(this));
     }
 
     private void Update()

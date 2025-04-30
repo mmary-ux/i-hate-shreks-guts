@@ -33,13 +33,16 @@ public class GameSettingsManager : MonoBehaviour
         EnemyAI[] allEnemies = FindObjectsOfType<EnemyAI>(true); // true включает неактивные объекты
         foreach (EnemyAI enemy in allEnemies)
         {
-            if (enemy != null)
-            {
-                enemy.SetPeacefulMode(PeacefulModeEnabled);
-            }
+            enemy?.SetPeacefulMode(PeacefulModeEnabled);
+        }
+        BossAI[] allBosses = FindObjectsOfType<BossAI>(true);
+        foreach (BossAI boss in allBosses) 
+        {
+            boss?.SetPeacefulMode(PeacefulModeEnabled);
         }
         
         Debug.Log($"Peaceful mode set to {PeacefulModeEnabled} for {allEnemies.Length} enemies");
+        Debug.Log($"Peaceful mode set to {PeacefulModeEnabled} for {allBosses.Length} bosses");
     }
     
     public void OnSceneLoaded()

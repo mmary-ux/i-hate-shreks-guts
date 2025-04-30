@@ -9,13 +9,20 @@ public class BossHealth : MonoBehaviour
 
     [SerializeField] private Animator animator;
 
+    private BossStateMachine stateMachine;
     public bool isDead = false;
 
     [SerializeField] private int id;
 
+    private void Awake()
+    {
+        stateMachine = GetComponent<BossStateMachine>();
+    }
+
     private void Start()
     {
         if (isDead) { gameObject.SetActive(false); return; }
+        stateMachine = GetComponent<BossStateMachine>();
         if (healthSlider != null)
         {
             healthSlider.maxValue = maxHealth;
@@ -31,6 +38,13 @@ public class BossHealth : MonoBehaviour
         currentHealth = Mathf.Max(currentHealth, 0);
         UpdateHealthUI();
         if (currentHealth <= 0) Die();
+        else 
+        {
+            if (stateMachine.IsPeacefulMode)
+            {
+                stateMachine.ChangeState(new BossAggressiveState(stateMachine));
+            }
+        }
     }
 
     private void Die()

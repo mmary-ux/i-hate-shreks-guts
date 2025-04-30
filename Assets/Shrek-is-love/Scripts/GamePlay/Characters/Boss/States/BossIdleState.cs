@@ -13,6 +13,10 @@ public class BossIdleState : AbstractBossState
 
     public override void LogicUpdate()
     {
+        if (_stateMachine.IsPeacefulMode)
+        {
+            return;
+        }
         if (_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             _stateMachine.ChangeState(new BossAggressiveState(_stateMachine));
