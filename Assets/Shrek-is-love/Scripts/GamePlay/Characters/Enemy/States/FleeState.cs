@@ -15,7 +15,7 @@ public class FleeState : AbstractEnemyState
     {
         _stateMachine.Animator.SetBool("IsChasing", true);
         _stateMachine.Agent.isStopped = false;
-        _stateMachine.Agent.speed = _stateMachine.Settings.speedRun * 1.5f; // Бежим быстрее
+        _stateMachine.Agent.speed = _stateMachine.Settings.speedRun * 1.5f;
         
         if (waypoints.Length > 0)
         {
@@ -47,19 +47,15 @@ public class FleeState : AbstractEnemyState
 
     public override void PhysicsUpdate()
     {
-        // Физика перемещения обрабатывается NavMeshAgent
     }
 
     public override void LogicUpdate()
     {
-        // Если здоровье восстановлено - возвращаемся в состояние покоя
         if (_stateMachine.Health.currentHealth > _stateMachine.Health.maxHealth * 0.3f)
         {
             _stateMachine.ChangeState(new IdleState(_stateMachine));
             return;
         }
-
-        // Если достигли waypoint - выбираем следующий
         if (waypoints.Length > 0 && 
             !_stateMachine.Agent.pathPending && 
             _stateMachine.Agent.remainingDistance <= _stateMachine.Agent.stoppingDistance + 0.1f)

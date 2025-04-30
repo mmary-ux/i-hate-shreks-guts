@@ -15,6 +15,7 @@ public class MagicSpell : MonoBehaviour
 
     public void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
         time = existingTime;
     }
 

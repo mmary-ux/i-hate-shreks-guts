@@ -1,12 +1,11 @@
+using System;
 using UnityEngine;
 
-public class EnemyAI : MonoBehaviour, IDataPersistence
+public class EnemyAI : MonoBehaviour
 {
     public EnemySettings settings;
     public Transform[] waypoints;
     public bool isPeacefulMode = false;
-
-    [SerializeField] private int id;
 
     private EnemyStateMachine stateMachine;
     private EnemyVision vision;
@@ -56,21 +55,5 @@ public class EnemyAI : MonoBehaviour, IDataPersistence
                 }
             }
         }
-    }
-
-    public void LoadData(GameData gameData)
-    {
-        if (gameData.EnemyStatistics.TryGetValue(id, out EnemyData enemyData))
-        {
-            this.transform.position = enemyData.enemyPosition;
-            health.currentHealth = enemyData.enemyHealth;
-            health.isDead = enemyData.isDead;
-            health.UpdateHealthUI();
-        }
-    }
-
-    public void SaveData(ref GameData gameData)
-    {
-        gameData.EnemyStatistics[id] = new EnemyData(this.transform.position, health.currentHealth, health.isDead);
     }
 }

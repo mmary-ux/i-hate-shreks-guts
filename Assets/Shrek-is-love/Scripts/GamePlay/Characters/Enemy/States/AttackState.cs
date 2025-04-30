@@ -1,4 +1,3 @@
-// new attack state
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -32,12 +31,10 @@ public class AttackState : AbstractEnemyState
 
     public override void AnimationUpdate()
     {
-        // Анимация атаки обрабатывается через триггеры
     }
 
     public override void PhysicsUpdate()
     {
-        // Поворачиваемся к игроку
         Vector3 playerPos = player.position;
         _stateMachine.Enemy.transform.LookAt(new Vector3(playerPos.x, _stateMachine.Enemy.transform.position.y, playerPos.z));
     }
@@ -46,14 +43,12 @@ public class AttackState : AbstractEnemyState
     {
         float distance = Vector3.Distance(_stateMachine.Enemy.transform.position, player.position);
 
-        // Если игрок слишком далеко - переходим в агрессивное состояние
         if (distance > _stateMachine.Settings.attackRange * 1.2f)
         {
             _stateMachine.ChangeState(new AggressiveState(_stateMachine));
             return;
         }
 
-        // Если игрок вне поля зрения - возвращаемся в состояние покоя
         if (!_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             _stateMachine.ChangeState(new IdleState(_stateMachine));

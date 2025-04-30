@@ -1,4 +1,3 @@
-// before: chase state
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -35,21 +34,18 @@ public class AggressiveState : AbstractEnemyState
 
     public override void PhysicsUpdate()
     {
-        // Физика перемещения обрабатывается NavMeshAgent
     }
 
     public override void LogicUpdate()
     {
         float distanceToPlayer = Vector3.Distance(_stateMachine.Enemy.transform.position, player.position);
 
-        // Если игрок близко - атакуем
         if (distanceToPlayer <= _stateMachine.Settings.attackRange)
         {
             _stateMachine.ChangeState(new AttackState(_stateMachine));
             return;
         }
 
-        // Если игрок вне поля зрения - возвращаемся в состояние покоя
         if (!_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             playerLost = true;
@@ -57,7 +53,6 @@ public class AggressiveState : AbstractEnemyState
             return;
         }
 
-        // Продолжаем преследование
         _stateMachine.Agent.SetDestination(player.position);
     }
 }

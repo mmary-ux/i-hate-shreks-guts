@@ -32,12 +32,10 @@ public class IdleState : AbstractEnemyState
 
     public override void PhysicsUpdate()
     {
-        // Физика перемещения обрабатывается NavMeshAgent
     }
 
     public override void LogicUpdate()
     {
-        // В мирном режиме проверяем только здоровье для перехода в бегство
         if (_stateMachine.IsPeacefulMode)
         {
             if (_stateMachine.Health.currentHealth <= _stateMachine.Health.maxHealth * 0.3f)
@@ -46,14 +44,13 @@ public class IdleState : AbstractEnemyState
                 return;
             }
         }
-        // В обычном режиме проверяем видимость игрока
+
         else if (_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             _stateMachine.ChangeState(new AggressiveState(_stateMachine));
             return;
         }
 
-        // Логика патрулирования
         if (waypoints.Length == 0) return;
 
         if (!_stateMachine.Agent.pathPending && _stateMachine.Agent.remainingDistance <= _stateMachine.Agent.stoppingDistance + 0.1f)
