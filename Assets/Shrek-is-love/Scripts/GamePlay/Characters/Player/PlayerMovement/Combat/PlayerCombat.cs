@@ -60,7 +60,7 @@ public class PlayerCombat : MonoBehaviour
     private void DealDamageToEnemies(int damage, string attackType)
     {
         float attackRadius = (attackType == "Attack") ? physAttackRadius : yellAttackRadius;
-        LayerMask enemyLayer = LayerMask.GetMask("Enemy");
+        LayerMask enemyLayer = LayerMask.GetMask("Enemy", "Boss"); 
 
         Collider[] hitEnemies = Physics.OverlapSphere(transform.position, attackRadius, enemyLayer);
 
@@ -71,6 +71,20 @@ public class PlayerCombat : MonoBehaviour
             {
                 enemyHealth.TakeDamage(damage);
                 Debug.Log($"Игрок нанес {damage} врагу {enemy.name} (Тип атаки: {attackType})");
+            }
+
+            BossHealth bossHealth = enemy.GetComponent<BossHealth>();
+            if (bossHealth != null)
+            {
+                bossHealth.TakeDamage(damage);
+                Debug.Log($"Игрок нанес {damage} боссу {enemy.name}");
+                
+                // Если в мирном режиме - активируем агрессию
+                BossAI bossAI = enemy.GetComponent<BossAI>();
+                if (bossAI != null && bossAI.isPeacefulMode)
+                {
+                    bossAI.SetPeacefulMode(false);
+                }
             }
         }
     }

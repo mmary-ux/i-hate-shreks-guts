@@ -1,49 +1,61 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class AttackState
+public class AttackState : AbstractEnemyState
 {
-    private readonly EnemyStateMachine stateMachine;
-    private readonly NavMeshAgent agent;
-    private readonly Animator animator;
-    private readonly EnemySettings settings;
-    private readonly DamageDealer damageDealer;
-    private readonly MagicSpell magicSpell;
-
+    private Transform player;
     private float attackCooldown;
     private bool isAttacking;
+    private DamageDealer damageDealer;
+    private MagicSpell magicSpell;
 
-    public AttackState(EnemyStateMachine stateMachine, NavMeshAgent agent, Animator animator, EnemySettings settings)
+    public AttackState(EnemyStateMachine stateMachine) : base(stateMachine)
     {
-        this.stateMachine = stateMachine;
-        this.agent = agent;
-        this.animator = animator;
-        this.settings = settings;
-        damageDealer = stateMachine.GetComponent<DamageDealer>();
-        magicSpell = stateMachine.GetComponent<MagicSpell>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        damageDealer = _stateMachine.GetComponent<DamageDealer>();
+        magicSpell = _stateMachine.GetComponent<MagicSpell>();
     }
 
-    public void Enter()
+    public override void Enter()
     {
-        agent.isStopped = true;
-        attackCooldown = settings.attackWaitTime;
+        _stateMachine.Agent.isStopped = true;
+        attackCooldown = _stateMachine.Settings.attackWaitTime;
         isAttacking = false;
         TryAttack();
     }
 
-    public void Update()
+    public override void Exit()
     {
-        Vector3 playerPos = GameObject.FindGameObjectWithTag("Player").transform.position;
-        stateMachine.transform.LookAt(new Vector3(playerPos.x, stateMachine.transform.position.y, playerPos.z));
+        _stateMachine.Animator.ResetTrigger("Attack");
+    }
 
-        float distance = Vector3.Distance(stateMachine.transform.position, playerPos);
+    public override void AnimationUpdate()
+    {
+    }
 
-        if (distance > settings.attackRange * 1.2f)
+    public override void PhysicsUpdate()
+    {
+        Vector3 playerPos = player.position;
+        _stateMachine.Enemy.transform.LookAt(new Vector3(playerPos.x, _stateMachine.Enemy.transform.position.y, playerPos.z));
+    }
+
+    public override void LogicUpdate()
+    {
+        float distance = Vector3.Distance(_stateMachine.Enemy.transform.position, player.position);
+
+        if (distance > _stateMachine.Settings.attackRange * 1.2f)
         {
-            stateMachine.SetState(EnemyState.Chase);
+            _stateMachine.ChangeState(new AggressiveState(_stateMachine));
             return;
         }
 
+        if (!_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
+        {
+            _stateMachine.ChangeState(new IdleState(_stateMachine));
+            return;
+        }
+
+        // Кулдаун атаки
         if (attackCooldown > 0)
         {
             attackCooldown -= Time.deltaTime;
@@ -56,14 +68,14 @@ public class AttackState
 
     private void TryAttack()
     {
-        if (animator.GetBool("IsHit") || animator.GetBool("IsDead"))
+        if (_stateMachine.Animator.GetBool("IsHit") || _stateMachine.Animator.GetBool("IsDead"))
             return;
 
         isAttacking = true;
-        attackCooldown = settings.attackWaitTime;
-        animator.SetTrigger("Attack");
+        attackCooldown = _stateMachine.Settings.attackWaitTime;
+        _stateMachine.Animator.SetTrigger("Attack");
 
-        if (stateMachine.currentEnemy.CompareTag("BasicEnemy"))
+        if (_stateMachine.Enemy.CompareTag("BasicEnemy"))
         {
             CallAfterDelay.Create(0.55f, () =>
             {
@@ -72,7 +84,7 @@ public class AttackState
                 isAttacking = false;
             });
         }
-        else if (stateMachine.currentEnemy.CompareTag("MagicEnemy"))
+        else if (_stateMachine.Enemy.CompareTag("MagicEnemy"))
         {
             magicSpell.Enter();
             isAttacking = false;

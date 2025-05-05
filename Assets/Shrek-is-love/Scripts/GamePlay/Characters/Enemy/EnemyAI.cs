@@ -1,51 +1,59 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.UIElements;
 
-public class EnemyAI : MonoBehaviour, IDataPersistence
+public class EnemyAI : MonoBehaviour
 {
     public EnemySettings settings;
     public Transform[] waypoints;
+    public bool isPeacefulMode = false;
 
     private EnemyStateMachine stateMachine;
     private EnemyVision vision;
     private EnemyHealth health;
 
-    [SerializeField] private int id;
-
     private void Awake()
     {
         stateMachine = GetComponent<EnemyStateMachine>();
         vision = GetComponent<EnemyVision>();
-        health = GetComponent<EnemyHealth>();  
+        health = GetComponent<EnemyHealth>();
+        
+        if (stateMachine != null)
+        {
+            stateMachine.IsPeacefulMode = isPeacefulMode;
+        }
     }
 
-    private void Update()
+    private void Start()
     {
-        if (vision.IsPlayerVisible(out Vector3 playerPosition))
+        if (GameSettingsManager.Instance != null)
         {
-            if (stateMachine.currentState == EnemyState.Patrol)
+            SetPeacefulMode(GameSettingsManager.Instance.PeacefulModeEnabled);
+        }
+        else
+        {
+            Debug.LogWarning("GameSettingsManager not found, using default peaceful mode");
+            SetPeacefulMode(false);
+        }
+    }
+
+    public void SetPeacefulMode(bool peaceful)
+    {
+        isPeacefulMode = peaceful;
+        if (stateMachine != null)
+        {
+            stateMachine.IsPeacefulMode = peaceful;
+            
+            if (peaceful && health.currentHealth <= health.maxHealth * 0.3f)
             {
-                stateMachine.SetState(EnemyState.Chase);
+                stateMachine.ChangeState(new FleeState(stateMachine));
+            }
+            else if (!peaceful && stateMachine.CurrentState is IdleState)
+            {
+                if (vision.IsPlayerVisible(out Vector3 playerPosition))
+                {
+                    stateMachine.ChangeState(new AggressiveState(stateMachine));
+                }
             }
         }
     }
-
-    public void LoadData(GameData gameData)
-    {
-        if (gameData.EnemyStatistics.TryGetValue(id, out EnemyData enemyData))
-        {
-            this.transform.position = enemyData.enemyPosition;
-            health.currentHealth = enemyData.enemyHealth;
-            health.isDead = enemyData.isDead;
-            health.UpdateHealthUI();
-        }
-    }
-
-    public void SaveData(ref GameData gameData)
-    {
-        gameData.EnemyStatistics[id] =  new EnemyData(this.transform.position, health.currentHealth, health.isDead);
-    }
 }
-
