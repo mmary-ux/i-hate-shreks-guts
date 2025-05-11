@@ -11,19 +11,19 @@ public class BossAttackState : AbstractBossState
     public BossAttackState(BossStateMachine stateMachine) : base(stateMachine)
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        magicSpell = _stateMachine.GetComponent<MagicSpell>();
+        magicSpell = _stateMachine.Boss.GetComponent<MagicSpell>();
     }
 
     public override void Enter()
     {
         hasAttacked = false;
-        _stateMachine.Animator.SetTrigger("Attack");
+        _stateMachine.Boss.Animator.SetTrigger("Attack");
         magicSpell.Enter();
     }
 
     public override void Exit()
     {
-        _stateMachine.Animator.ResetTrigger("Attack");
+        _stateMachine.Boss.Animator.ResetTrigger("Attack");
     }
 
     public override void AnimationUpdate() { }
@@ -37,7 +37,7 @@ public class BossAttackState : AbstractBossState
 
     public override void LogicUpdate()
     {
-        if (!hasAttacked && _stateMachine.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+        if (!hasAttacked && _stateMachine.Boss.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
             hasAttacked = true;
             _stateMachine.ChangeState(new BossAggressiveState(_stateMachine));

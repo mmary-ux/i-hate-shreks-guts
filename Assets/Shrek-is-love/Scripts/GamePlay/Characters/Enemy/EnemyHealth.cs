@@ -16,13 +16,13 @@ public class EnemyHealth : MonoBehaviour, IDataPersistence
 
     private void Awake() 
     {
-        stateMachine = GetComponent<EnemyStateMachine>();
+        stateMachine = GetComponent<EnemyAI>().stateMachine;
     }
 
     private void Start()
     {
         if (isDead) { gameObject.SetActive(false); return; }
-        stateMachine = GetComponent<EnemyStateMachine>();
+        stateMachine = GetComponent<EnemyAI>().stateMachine;
         if (healthSlider != null)
         {
             healthSlider.maxValue = maxHealth;

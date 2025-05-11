@@ -40,7 +40,7 @@ public abstract class AbstractBossFightState
 public class EnemyBoss
 {
     publicAnimator Animator { get; protected set; }
-    privateBossFightStateMachine? _stateMachine;
+    private BossFightStateMachine? _stateMachine;
     public EnemyBoss(Animator animator)
     {
         Animator = animator;
@@ -203,7 +203,7 @@ public classProgram
     {
         Animator animator = new Animator();
         EnemyBoss boss = newEnemyBoss(animator);
-        BossFightStateMachine stateMachine = newBossFightStateMachine(boss)
+        BossFightStateMachine stateMachine = new BossFightStateMachine(boss)
         boss.SetFightStateMachine(stateMachine);
         while(true)
         {

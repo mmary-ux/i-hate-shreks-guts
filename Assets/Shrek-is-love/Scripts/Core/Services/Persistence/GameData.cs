@@ -15,6 +15,7 @@ public class GameData
     public Vector3 PlayerPosition;
     public SerializableDictionary<string, bool> potionsCollected;
     public SerializableDictionary<int, EnemyData> EnemyStatistics;
+    public SerializableDictionary<int, BossData> BossStatistics;
 
     public GameData()
     {
@@ -30,5 +31,7 @@ public class GameData
         potionsCollected = new SerializableDictionary<string, bool>();
 
         EnemyStatistics = new SerializableDictionary<int, EnemyData>();
+
+        BossStatistics = new SerializableDictionary<int, BossData>();
     }
 }

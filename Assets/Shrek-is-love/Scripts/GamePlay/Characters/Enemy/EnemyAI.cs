@@ -7,24 +7,30 @@ public class EnemyAI : MonoBehaviour
     public Transform[] waypoints;
     public bool isPeacefulMode = false;
 
-    private EnemyStateMachine stateMachine;
-    private EnemyVision vision;
-    private EnemyHealth health;
+    public EnemyStateMachine stateMachine { get; private set; }
+
+    public GameObject Enemy { get; private set; }
+    public UnityEngine.AI.NavMeshAgent Agent { get; private set; }
+    public Animator Animator { get; private set; }
+    public EnemySettings Settings { get; private set; }
+    public EnemyVision Vision { get; private set; }
+    public EnemyHealth Health { get; private set; }
 
     private void Awake()
     {
-        stateMachine = GetComponent<EnemyStateMachine>();
-        vision = GetComponent<EnemyVision>();
-        health = GetComponent<EnemyHealth>();
-        
-        if (stateMachine != null)
-        {
-            stateMachine.IsPeacefulMode = isPeacefulMode;
-        }
+        Agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        Animator = GetComponent<Animator>();
+        Settings = settings;
+        Vision = GetComponent<EnemyVision>();
+        Health = GetComponent<EnemyHealth>();
+
+        stateMachine = new EnemyStateMachine(this);
     }
 
     private void Start()
     {
+        stateMachine.Initialize(this);
+
         if (GameSettingsManager.Instance != null)
         {
             SetPeacefulMode(GameSettingsManager.Instance.PeacefulModeEnabled);
@@ -36,24 +42,20 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        stateMachine?.CurrentState.LogicUpdate();
+        stateMachine?.CurrentState.AnimationUpdate();
+    }
+
+    private void FixedUpdate()
+    {
+        stateMachine?.CurrentState.PhysicsUpdate();
+    }
+
     public void SetPeacefulMode(bool peaceful)
     {
         isPeacefulMode = peaceful;
-        if (stateMachine != null)
-        {
-            stateMachine.IsPeacefulMode = peaceful;
-            
-            if (peaceful && health.currentHealth <= health.maxHealth * 0.3f)
-            {
-                stateMachine.ChangeState(new FleeState(stateMachine));
-            }
-            else if (!peaceful && stateMachine.CurrentState is IdleState)
-            {
-                if (vision.IsPlayerVisible(out Vector3 playerPosition))
-                {
-                    stateMachine.ChangeState(new AggressiveState(stateMachine));
-                }
-            }
-        }
+        stateMachine?.SetPeacefulMode(peaceful);
     }
 }

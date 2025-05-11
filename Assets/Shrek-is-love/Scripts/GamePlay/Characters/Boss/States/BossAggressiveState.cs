@@ -12,14 +12,14 @@ public class BossAggressiveState : AbstractBossState
     public BossAggressiveState(BossStateMachine stateMachine) : base(stateMachine)
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        UIStatistics = stateMachine.UIStatistics;
+        UIStatistics = stateMachine.Boss.UIStatistics;
     }
 
     public override void Enter()
     {
         UIStatistics.SetActive(true);
-        attackTimer = _stateMachine.Settings.timeBetweenAttacks;
-        forceFieldTimer = _stateMachine.Settings.forceFieldDuration;
+        attackTimer = _stateMachine.Boss.Settings.timeBetweenAttacks;
+        forceFieldTimer = _stateMachine.Boss.Settings.forceFieldDuration;
 
         if (currentForceField == null)
         {
@@ -45,8 +45,8 @@ public class BossAggressiveState : AbstractBossState
 
     public override void LogicUpdate()
     {
-        Debug.Log(_stateMachine.Mana.currentMana + " " + _stateMachine.Settings.manaForSpecialAttack);
-        if (!_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
+        Debug.Log(_stateMachine.Boss.Mana.currentMana + " " + _stateMachine.Boss.Settings.manaForSpecialAttack);
+        if (!_stateMachine.Boss.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             DestroyForceField();
             UIStatistics.SetActive(false);
@@ -58,18 +58,18 @@ public class BossAggressiveState : AbstractBossState
         if (forceFieldTimer <= 0f)
         {
             DestroyForceField();
-            forceFieldTimer = _stateMachine.Settings.forceFieldDuration;
+            forceFieldTimer = _stateMachine.Boss.Settings.forceFieldDuration;
             CreateForceField();
         }
 
         attackTimer -= Time.deltaTime;
-        _stateMachine.Mana.currentMana += Time.deltaTime;
+        _stateMachine.Boss.Mana.currentMana += Time.deltaTime;
         if (attackTimer <= 0f)
         {
-            if (_stateMachine.Mana.currentMana >= _stateMachine.Settings.manaForSpecialAttack)
+            if (_stateMachine.Boss.Mana.currentMana >= _stateMachine.Boss.Settings.manaForSpecialAttack)
             {
                 _stateMachine.ChangeState(new BossSpecialAttackState(_stateMachine));
-                _stateMachine.Mana.currentMana = 0;
+                _stateMachine.Boss.Mana.currentMana = 0;
             }
             else
             {
@@ -84,7 +84,7 @@ public class BossAggressiveState : AbstractBossState
         if (currentForceField != null) return;
 
         currentForceField = GameObject.Instantiate(
-            _stateMachine.Settings.forceFieldPrefab,
+            _stateMachine.Boss.Settings.forceFieldPrefab,
             player.position,
             Quaternion.identity
         );
@@ -103,11 +103,11 @@ public class BossAggressiveState : AbstractBossState
 
     private void SpawnMinions()
     {
-        for (int i = 0; i < _stateMachine.Settings.minionsToSpawn; i++)
+        for (int i = 0; i < _stateMachine.Boss.Settings.minionsToSpawn; i++)
         {
-            Vector3 spawnPos = player.position + Random.insideUnitSphere * _stateMachine.Settings.spawnRadius;
+            Vector3 spawnPos = player.position + Random.insideUnitSphere * _stateMachine.Boss.Settings.spawnRadius;
             GameObject.Instantiate(
-                _stateMachine.Settings.minionPrefab,
+                _stateMachine.Boss.Settings.minionPrefab,
                 spawnPos,
                 Quaternion.identity
             );

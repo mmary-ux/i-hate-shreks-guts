@@ -11,20 +11,20 @@ public class BossSpecialAttackState : AbstractBossState
     public BossSpecialAttackState(BossStateMachine stateMachine) : base(stateMachine)
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        specialAttack = stateMachine.GetComponent<SpecialAttack>();
+        specialAttack = stateMachine.Boss.GetComponent<SpecialAttack>();
     }
 
     public override void Enter()
     {
         hasAttacked = false;
-        _stateMachine.Animator.SetTrigger("SpecialAttack");
-        _stateMachine.Mana.UseMana(_stateMachine.Settings.manaForSpecialAttack);
+        _stateMachine.Boss.Animator.SetTrigger("SpecialAttack");
+        _stateMachine.Boss.Mana.UseMana(_stateMachine.Boss.Settings.manaForSpecialAttack);
         specialAttack.Enter();
     }
 
     public override void Exit()
     {
-        _stateMachine.Animator.ResetTrigger("SpecialAttack");
+        _stateMachine.Boss.Animator.ResetTrigger("SpecialAttack");
     }
 
     public override void AnimationUpdate() { }
@@ -38,7 +38,7 @@ public class BossSpecialAttackState : AbstractBossState
 
     public override void LogicUpdate()
     {
-        if (!hasAttacked && _stateMachine.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+        if (!hasAttacked && _stateMachine.Boss.Animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
             hasAttacked = true;
 

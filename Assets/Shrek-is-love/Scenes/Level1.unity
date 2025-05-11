@@ -1504,18 +1504,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400116, guid: 2a2eaaaaf202acc4291e6f046a2c6f5d, type: 3}
   m_PrefabInstance: {fileID: 1126257719}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &62716696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 62716684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bdec06b34abf94408ea7f5e5553b1a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &66438777
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5374,9 +5362,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d5b7a2f71194f0d48b94b17413388d65, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1590583502}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d5b7a2f71194f0d48b94b17413388d65, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1590583501}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d5b7a2f71194f0d48b94b17413388d65, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1590583498}
@@ -15950,18 +15935,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400116, guid: cb2a63aa7e6bbda4b8127e31c18ef3e9, type: 3}
   m_PrefabInstance: {fileID: 2135324281}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1030196204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1030196192}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bdec06b34abf94408ea7f5e5553b1a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1033959722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17146,9 +17119,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100116, guid: 2a2eaaaaf202acc4291e6f046a2c6f5d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 62716690}
-    - targetCorrespondingSourceObject: {fileID: 100116, guid: 2a2eaaaaf202acc4291e6f046a2c6f5d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 62716696}
   m_SourcePrefab: {fileID: 100100000, guid: 2a2eaaaaf202acc4291e6f046a2c6f5d, type: 3}
 --- !u!4 &1129505707 stripped
 Transform:
@@ -24392,19 +24362,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1590583501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 310773885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f70c486319b0bf14ab20e03be137a1c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UIStatistics: {fileID: 1767474667}
 --- !u!114 &1590583502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24419,6 +24376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings: {fileID: 11400000, guid: 842aff5ed9702934ea5a0e17c93b9c10, type: 2}
   isPeacefulMode: 1
+  UIStatistics: {fileID: 1767474667}
 --- !u!114 &1590583503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25397,9 +25355,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2426c354554d443998db6ae5594c4426, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1604544045}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2426c354554d443998db6ae5594c4426, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1604544046}
   m_SourcePrefab: {fileID: 100100000, guid: 2426c354554d443998db6ae5594c4426, type: 3}
 --- !u!4 &1604544042 stripped
 Transform:
@@ -25437,18 +25392,6 @@ MonoBehaviour:
   - {fileID: 1551502686}
   - {fileID: 1895402771}
   isPeacefulMode: 1
---- !u!114 &1604544046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8509935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bdec06b34abf94408ea7f5e5553b1a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1607689759
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33746,9 +33689,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100116, guid: cb2a63aa7e6bbda4b8127e31c18ef3e9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1030196198}
-    - targetCorrespondingSourceObject: {fileID: 100116, guid: cb2a63aa7e6bbda4b8127e31c18ef3e9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1030196204}
   m_SourcePrefab: {fileID: 100100000, guid: cb2a63aa7e6bbda4b8127e31c18ef3e9, type: 3}
 --- !u!4 &2140888792 stripped
 Transform:
@@ -33842,17 +33782,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 769326559}
     - target: {fileID: 7474109859889480051, guid: 2466632dafd76e04b87ff05d0e2a7565, type: 3}
+      propertyPath: settings
+      value: 
+      objectReference: {fileID: 11400000, guid: ff1dec20f9dc75a48a0c0bc63241cc6f, type: 2}
+    - target: {fileID: 7474109859889480051, guid: 2466632dafd76e04b87ff05d0e2a7565, type: 3}
+      propertyPath: isPeacefulMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7474109859889480051, guid: 2466632dafd76e04b87ff05d0e2a7565, type: 3}
+      propertyPath: waypoints.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7474109859889480051, guid: 2466632dafd76e04b87ff05d0e2a7565, type: 3}
       propertyPath: waypoints.Array.data[0]
       value: 
-      objectReference: {fileID: 1895402771}
+      objectReference: {fileID: 1551502686}
     - target: {fileID: 7474109859889480051, guid: 2466632dafd76e04b87ff05d0e2a7565, type: 3}
       propertyPath: waypoints.Array.data[1]
       value: 
-      objectReference: {fileID: 1218489027}
+      objectReference: {fileID: 1895402771}
     - target: {fileID: 7474109859889480051, guid: 2466632dafd76e04b87ff05d0e2a7565, type: 3}
       propertyPath: waypoints.Array.data[2]
       value: 
-      objectReference: {fileID: 1551502686}
+      objectReference: {fileID: 1218489027}
     - target: {fileID: 7854741368357706459, guid: 2466632dafd76e04b87ff05d0e2a7565, type: 3}
       propertyPath: m_LocalPosition.x
       value: 10.068001

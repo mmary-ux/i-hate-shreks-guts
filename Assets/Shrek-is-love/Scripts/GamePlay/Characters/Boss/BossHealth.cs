@@ -16,13 +16,13 @@ public class BossHealth : MonoBehaviour
 
     private void Awake()
     {
-        stateMachine = GetComponent<BossStateMachine>();
+        stateMachine = GetComponent<BossAI>().stateMachine;
     }
 
     private void Start()
     {
         if (isDead) { gameObject.SetActive(false); return; }
-        stateMachine = GetComponent<BossStateMachine>();
+        stateMachine = GetComponent<BossAI>().stateMachine;
         if (healthSlider != null)
         {
             healthSlider.maxValue = maxHealth;
@@ -55,6 +55,7 @@ public class BossHealth : MonoBehaviour
         CallAfterDelay.Create(3f, () =>
         {
             gameObject.SetActive(false);
+            stateMachine.Boss.UIStatistics.SetActive(false);
         });
     }
 

@@ -12,21 +12,21 @@ public class AttackState : AbstractEnemyState
     public AttackState(EnemyStateMachine stateMachine) : base(stateMachine)
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        damageDealer = _stateMachine.GetComponent<DamageDealer>();
-        magicSpell = _stateMachine.GetComponent<MagicSpell>();
+        damageDealer = _stateMachine.Enemy.GetComponent<DamageDealer>();
+        magicSpell = _stateMachine.Enemy.GetComponent<MagicSpell>();
     }
 
     public override void Enter()
     {
-        _stateMachine.Agent.isStopped = true;
-        attackCooldown = _stateMachine.Settings.attackWaitTime;
+        _stateMachine.Enemy.Agent.isStopped = true;
+        attackCooldown = _stateMachine.Enemy.Settings.attackWaitTime;
         isAttacking = false;
         TryAttack();
     }
 
     public override void Exit()
     {
-        _stateMachine.Animator.ResetTrigger("Attack");
+        _stateMachine.Enemy.Animator.ResetTrigger("Attack");
     }
 
     public override void AnimationUpdate()
@@ -43,13 +43,13 @@ public class AttackState : AbstractEnemyState
     {
         float distance = Vector3.Distance(_stateMachine.Enemy.transform.position, player.position);
 
-        if (distance > _stateMachine.Settings.attackRange * 1.2f)
+        if (distance > _stateMachine.Enemy.Settings.attackRange * 1.2f)
         {
             _stateMachine.ChangeState(new AggressiveState(_stateMachine));
             return;
         }
 
-        if (!_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
+        if (!_stateMachine.Enemy.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             _stateMachine.ChangeState(new IdleState(_stateMachine));
             return;
@@ -68,12 +68,12 @@ public class AttackState : AbstractEnemyState
 
     private void TryAttack()
     {
-        if (_stateMachine.Animator.GetBool("IsHit") || _stateMachine.Animator.GetBool("IsDead"))
+        if (_stateMachine.Enemy.Animator.GetBool("IsHit") || _stateMachine.Enemy.Animator.GetBool("IsDead"))
             return;
 
         isAttacking = true;
-        attackCooldown = _stateMachine.Settings.attackWaitTime;
-        _stateMachine.Animator.SetTrigger("Attack");
+        attackCooldown = _stateMachine.Enemy.Settings.attackWaitTime;
+        _stateMachine.Enemy.Animator.SetTrigger("Attack");
 
         if (_stateMachine.Enemy.CompareTag("BasicEnemy"))
         {

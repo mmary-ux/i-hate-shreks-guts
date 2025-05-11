@@ -13,9 +13,9 @@ public class AggressiveState : AbstractEnemyState
 
     public override void Enter()
     {
-        _stateMachine.Animator.SetBool("IsChasing", true);
-        _stateMachine.Agent.isStopped = false;
-        _stateMachine.Agent.speed = _stateMachine.Settings.speedRun;
+        _stateMachine.Enemy.Animator.SetBool("IsChasing", true);
+        _stateMachine.Enemy.Agent.isStopped = false;
+        _stateMachine.Enemy.Agent.speed = _stateMachine.Enemy.Settings.speedRun;
         playerLost = false;
     }
 
@@ -29,7 +29,7 @@ public class AggressiveState : AbstractEnemyState
 
     public override void AnimationUpdate()
     {
-        _stateMachine.Animator.SetFloat("Speed", _stateMachine.Agent.velocity.magnitude);
+        _stateMachine.Enemy.Animator.SetFloat("Speed", _stateMachine.Enemy.Agent.velocity.magnitude);
     }
 
     public override void PhysicsUpdate()
@@ -40,19 +40,19 @@ public class AggressiveState : AbstractEnemyState
     {
         float distanceToPlayer = Vector3.Distance(_stateMachine.Enemy.transform.position, player.position);
 
-        if (distanceToPlayer <= _stateMachine.Settings.attackRange)
+        if (distanceToPlayer <= _stateMachine.Enemy.Settings.attackRange)
         {
             _stateMachine.ChangeState(new AttackState(_stateMachine));
             return;
         }
 
-        if (!_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
+        if (!_stateMachine.Enemy.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             playerLost = true;
             _stateMachine.ChangeState(new IdleState(_stateMachine));
             return;
         }
 
-        _stateMachine.Agent.SetDestination(player.position);
+        _stateMachine.Enemy.Agent.SetDestination(player.position);
     }
 }

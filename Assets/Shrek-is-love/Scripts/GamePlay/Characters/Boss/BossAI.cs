@@ -5,28 +5,33 @@ using UnityEngine;
 public class BossAI : MonoBehaviour
 {
     public BossSettings settings;
-
-    private BossStateMachine stateMachine;
-    private BossVision vision;
-    private BossHealth health;
-    private BossMana mana;
     public bool isPeacefulMode = false;
+
+    public BossStateMachine stateMachine { get; private set; }
+
+    public GameObject Boss { get; private set; }
+    public Animator Animator { get; private set; }
+    public BossSettings Settings { get; private set; }
+    public BossVision Vision { get; private set; }
+    public BossHealth Health { get; private set; }
+    public BossMana Mana { get; private set; }
+    public GameObject UIStatistics;
 
     private void Awake()
     {
-        stateMachine = GetComponent<BossStateMachine>();
-        vision = GetComponent<BossVision>();
-        health = GetComponent<BossHealth>();
-        mana = GetComponent<BossMana>();
+        Animator = GetComponent<Animator>();
+        Settings = settings;
+        Vision = GetComponent<BossVision>();
+        Health = GetComponent<BossHealth>();
+        Mana = GetComponent<BossMana>();
 
-        if (stateMachine != null)
-        {
-            stateMachine.IsPeacefulMode = isPeacefulMode;
-        }
+        stateMachine = new BossStateMachine(this);
     }
 
     private void Start()
     {
+        stateMachine.Initialize(this);
+
         if (GameSettingsManager.Instance != null)
         {
             SetPeacefulMode(GameSettingsManager.Instance.PeacefulModeEnabled);
@@ -38,24 +43,20 @@ public class BossAI : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        stateMachine?.CurrentState.LogicUpdate();
+        stateMachine?.CurrentState.AnimationUpdate();
+    }
+
+    private void FixedUpdate()
+    {
+        stateMachine?.CurrentState.PhysicsUpdate();
+    }
+
     public void SetPeacefulMode(bool peaceful)
     {
         isPeacefulMode = peaceful;
-        if (stateMachine != null)
-        {
-            stateMachine.IsPeacefulMode = peaceful;
-            
-            if (peaceful && !(stateMachine.CurrentState is BossIdleState))
-            {
-                stateMachine.ChangeState(new BossIdleState(stateMachine));
-            }
-            if (!peaceful && stateMachine.CurrentState is BossIdleState)
-            {
-                if (vision.IsPlayerVisible(out Vector3 playerPosition))
-                {
-                    stateMachine.ChangeState(new BossAggressiveState(stateMachine));
-                }
-            }
-        }
+        stateMachine?.SetPeacefulMode(peaceful);
     }
 }

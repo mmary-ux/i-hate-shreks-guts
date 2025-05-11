@@ -10,24 +10,24 @@ public class IdleState : AbstractEnemyState
 
     public IdleState(EnemyStateMachine stateMachine) : base(stateMachine)
     {
-        waypoints = _stateMachine.GetComponent<EnemyAI>().waypoints;
+        waypoints = _stateMachine.Enemy.waypoints;
     }
 
     public override void Enter()
     {
-        waitTime = _stateMachine.Settings.startWaitTime;
-        _stateMachine.Agent.isStopped = false;
-        _stateMachine.Agent.speed = _stateMachine.Settings.speedWalk;
+        waitTime = _stateMachine.Enemy.Settings.startWaitTime;
+        _stateMachine.Enemy.Agent.isStopped = false;
+        _stateMachine.Enemy.Agent.speed = _stateMachine.Enemy.Settings.speedWalk;
         
         if (waypoints.Length > 0)
         {
-            _stateMachine.Agent.SetDestination(waypoints[currentWaypointIndex].position);
+            _stateMachine.Enemy.Agent.SetDestination(waypoints[currentWaypointIndex].position);
         }
     }
 
     public override void AnimationUpdate()
     {
-        _stateMachine.Animator.SetFloat("Speed", _stateMachine.Agent.velocity.magnitude);
+        _stateMachine.Enemy.Animator.SetFloat("Speed", _stateMachine.Enemy.Agent.velocity.magnitude);
     }
 
     public override void PhysicsUpdate()
@@ -38,14 +38,14 @@ public class IdleState : AbstractEnemyState
     {
         if (_stateMachine.IsPeacefulMode)
         {
-            if (_stateMachine.Health.currentHealth <= _stateMachine.Health.maxHealth * 0.3f)
+            if (_stateMachine.Enemy.Health.currentHealth <= _stateMachine.Enemy.Health.maxHealth * 0.3f)
             {
                 _stateMachine.ChangeState(new FleeState(_stateMachine));
                 return;
             }
         }
 
-        else if (_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
+        else if (_stateMachine.Enemy.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             _stateMachine.ChangeState(new AggressiveState(_stateMachine));
             return;
@@ -53,12 +53,12 @@ public class IdleState : AbstractEnemyState
 
         if (waypoints.Length == 0) return;
 
-        if (!_stateMachine.Agent.pathPending && _stateMachine.Agent.remainingDistance <= _stateMachine.Agent.stoppingDistance + 0.1f)
+        if (!_stateMachine.Enemy.Agent.pathPending && _stateMachine.Enemy.Agent.remainingDistance <= _stateMachine.Enemy.Agent.stoppingDistance + 0.1f)
         {
-            if (!_stateMachine.Agent.isStopped)
+            if (!_stateMachine.Enemy.Agent.isStopped)
             {
-                _stateMachine.Agent.isStopped = true;
-                waitTime = _stateMachine.Settings.startWaitTime;
+                _stateMachine.Enemy.Agent.isStopped = true;
+                waitTime = _stateMachine.Enemy.Settings.startWaitTime;
             }
 
             if (waitTime > 0)
@@ -68,7 +68,7 @@ public class IdleState : AbstractEnemyState
             else
             {
                 NextPoint();
-                _stateMachine.Agent.isStopped = false;
+                _stateMachine.Enemy.Agent.isStopped = false;
             }
         }
     }
@@ -76,6 +76,6 @@ public class IdleState : AbstractEnemyState
     private void NextPoint()
     {
         currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Length;
-        _stateMachine.Agent.SetDestination(waypoints[currentWaypointIndex].position);
+        _stateMachine.Enemy.Agent.SetDestination(waypoints[currentWaypointIndex].position);
     }
 }

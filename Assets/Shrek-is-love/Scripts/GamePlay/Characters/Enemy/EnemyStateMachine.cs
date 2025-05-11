@@ -1,37 +1,20 @@
 using UnityEngine;
 
-public class EnemyStateMachine : MonoBehaviour
+public class EnemyStateMachine
 {
+    public EnemyAI Enemy { get; private set; }
     public AbstractEnemyState CurrentState { get; protected set; }
-    public GameObject Enemy { get; private set; }
-    public UnityEngine.AI.NavMeshAgent Agent { get; private set; }
-    public Animator Animator { get; private set; }
-    public EnemySettings Settings { get; private set; }
-    public EnemyVision Vision { get; private set; }
-    public EnemyHealth Health { get; private set; }
-    public bool IsPeacefulMode { get; set; }
+    public bool IsPeacefulMode { get; private set; }
 
-    private void Awake()
+    public EnemyStateMachine(EnemyAI enemy)
     {
-        Enemy = gameObject;
-        Agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        Animator = GetComponent<Animator>();
-        Settings = GetComponent<EnemyAI>().settings;
-        Vision = GetComponent<EnemyVision>();
-        Health = GetComponent<EnemyHealth>();
-
-        ChangeState(new IdleState(this));
+        Enemy = enemy;
     }
 
-    private void Update()
+    public virtual void Initialize(EnemyAI enemy)
     {
-        CurrentState?.LogicUpdate();
-        CurrentState?.AnimationUpdate();
-    }
-
-    private void FixedUpdate()
-    {
-        CurrentState?.PhysicsUpdate();
+        CurrentState = new IdleState(this);
+        CurrentState.Enter();
     }
 
     public void ChangeState(AbstractEnemyState newState)
@@ -39,5 +22,22 @@ public class EnemyStateMachine : MonoBehaviour
         CurrentState?.Exit();
         CurrentState = newState;
         newState.Enter();
+    }
+    
+    public void SetPeacefulMode(bool peaceful)
+    {
+        IsPeacefulMode = peaceful;
+        
+        if (peaceful && Enemy.Health.currentHealth <= Enemy.Health.maxHealth * 0.3f)
+        {
+            ChangeState(new FleeState(this));
+        }
+        else if (!peaceful && CurrentState is IdleState)
+        {
+            if (Enemy.Vision.IsPlayerVisible(out Vector3 playerPosition))
+            {
+                ChangeState(new AggressiveState(this));
+            }
+        }
     }
 }

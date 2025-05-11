@@ -17,7 +17,7 @@ public class BossIdleState : AbstractBossState
         {
             return;
         }
-        if (_stateMachine.Vision.IsPlayerVisible(out Vector3 playerPosition))
+        if (_stateMachine.Boss.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             _stateMachine.ChangeState(new BossAggressiveState(_stateMachine));
         }
