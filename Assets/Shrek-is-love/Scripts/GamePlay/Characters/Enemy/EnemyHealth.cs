@@ -84,6 +84,9 @@ public class EnemyHealth : MonoBehaviour, IDataPersistence
 
     public void SaveData(ref GameData gameData)
     {
-        gameData.EnemyStatistics[id] = new EnemyData(this.transform.position, currentHealth, isDead);
+        if (this) 
+        {
+            gameData.EnemyStatistics[id] = new EnemyData(this.transform.position, currentHealth, isDead);
+        }
     }
 }

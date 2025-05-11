@@ -18,7 +18,7 @@ public class HealthSystem : MonoBehaviour, IDataPersistence
     
     private float baseWidth;
 
-    [SerializeField] private UIManipulation uiManipulation;
+    [SerializeField] private GameLevelUIController gameLevelUIController;
 
     private static HealthSystem _instance;
 
@@ -95,9 +95,9 @@ public class HealthSystem : MonoBehaviour, IDataPersistence
     private void Die()
     {
         Debug.Log("Player is dead!");
-        if (uiManipulation != null) 
+        if (gameLevelUIController != null) 
         {
-            uiManipulation.DeathSequence();
+            gameLevelUIController.ShowDeathScreen();
         }
     }
 

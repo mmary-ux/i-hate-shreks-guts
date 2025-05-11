@@ -1,24 +1,31 @@
-using UnityEngine;
 using UnityEngine.UI;
 
-public class PeacefulModeToggleManager : MonoBehaviour
+public class PeacefulModeToggleManager
 {
-    [SerializeField] private Toggle toggle;
+    private Toggle toggle;
+    private GameSettingsManager settingsManager;
     
-    private void Start()
+    public PeacefulModeToggleManager(Toggle toggle, GameSettingsManager settingsManager)
     {
-        toggle.isOn = GameSettingsManager.Instance.PeacefulModeEnabled;
+        this.toggle = toggle;
+        this.settingsManager = settingsManager;
         
+        toggle.isOn = settingsManager.PeacefulModeEnabled;
         toggle.onValueChanged.AddListener(OnToggleChanged);
     }
     
     public void OnToggleChanged(bool isOn)
     {
-        GameSettingsManager.Instance.SetPeacefulMode(isOn);
+        settingsManager.SetPeacefulMode(isOn);
     }
     
-    private void OnDestroy()
+    public void Show()
     {
-        toggle.onValueChanged.RemoveListener(OnToggleChanged);
+        toggle.gameObject.SetActive(true);
+    }
+    
+    public void Hide()
+    {
+        toggle.gameObject.SetActive(false);
     }
 }
