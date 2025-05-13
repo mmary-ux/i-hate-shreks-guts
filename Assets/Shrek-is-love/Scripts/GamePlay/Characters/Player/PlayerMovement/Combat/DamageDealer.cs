@@ -9,15 +9,6 @@ public class DamageDealer : MonoBehaviour
     public float attackCooldown = 1.5f; 
     private bool canAttack = true; 
 
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     HealthSystem healthSystem = other.GetComponent<HealthSystem>();
-    //     if (healthSystem != null)
-    //     {
-    //         healthSystem.TakeDamage(damageAmount);
-    //     }
-    // }
-
     public void Attack()
     {
         if (!canAttack) return;

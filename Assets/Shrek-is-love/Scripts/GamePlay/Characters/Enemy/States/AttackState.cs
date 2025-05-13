@@ -8,12 +8,14 @@ public class AttackState : AbstractEnemyState
     private bool isAttacking;
     private DamageDealer damageDealer;
     private MagicSpell magicSpell;
+    private IWeapon weapon;
 
     public AttackState(EnemyStateMachine stateMachine) : base(stateMachine)
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         damageDealer = _stateMachine.Enemy.GetComponent<DamageDealer>();
         magicSpell = _stateMachine.Enemy.GetComponent<MagicSpell>();
+        weapon = _stateMachine.Enemy.GetComponent<IWeapon>();
     }
 
     public override void Enter()
@@ -80,7 +82,7 @@ public class AttackState : AbstractEnemyState
             CallAfterDelay.Create(0.55f, () =>
             {
                 GameObject.FindObjectOfType<AudioManager>().Play("Punch");
-                damageDealer?.Attack();
+                weapon?.Hit();
                 isAttacking = false;
             });
         }

@@ -27,7 +27,7 @@ public class BossStateMachine
     public void SetPeacefulMode(bool peaceful)
     {
         IsPeacefulMode = peaceful;
-        
+
         if (peaceful && !(CurrentState is BossIdleState))
         {
             ChangeState(new BossIdleState(this));

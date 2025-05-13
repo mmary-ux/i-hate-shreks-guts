@@ -30,7 +30,6 @@ public class MagicSpell : MonoBehaviour
     }
     void Update()
     {
-
         if (existingTime > 0 && isSpawned)
         {
             existingTime -= Time.deltaTime;
