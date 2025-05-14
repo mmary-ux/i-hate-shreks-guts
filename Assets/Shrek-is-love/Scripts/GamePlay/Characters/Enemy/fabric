@@ -1,0 +1,63 @@
+using UnityEngine;
+
+// Интерфейс врага
+public interface IEnemy
+{
+    void Attack();
+    voi dMove();
+}
+
+// Реализации конкретных врагов
+public class Zombie : MonoBehaviour, IEnemy
+{
+    public void Attack() => Debug.Log("Зомби кусает!");
+    public void Move() => Debug.Log("Зомби медленно идёт.");
+}
+public class Skeleton : MonoBehaviour, IEnemy
+{
+    public void Attack() => Debug.Log("Скелет стреляет из лука!");
+    public void Move() => Debug.Log("Скелет быстро бегает.");
+}
+
+// Абстрактный спавнер
+public abstract class EnemySpawner
+{
+    public abstract IEnemy SpawnEnemy(GameObject prefab, Vector3 position);
+}
+
+// Реализации конкретных спавнеров
+public class ZombieSpawner: EnemySpawner
+{
+    public override IEnemy SpawnEnemy(GameObject prefab, Vector3 position)
+    {
+        GameObject zombieObj = Object.Instantiate(prefab, position, Quaternion);
+        return zombieObj.GetComponent<Zombie>();
+    }
+}
+public class SkeletonSpawner: EnemySpawner
+{
+    public override IEnemySpawnEnemy(GameObject prefab, Vector3 position)
+    {
+        GameObject skeletonObj = Object.Instantiate(prefab, position, Quaternion);
+        return skeletonObj.GetComponent<Skeleton>();
+    }
+}
+
+// Использование
+public class GameController : MonoBehaviour
+{
+    public GameObject zombiePrefab;
+    public GameObject skeletonPrefab;
+
+    void Start() 
+    {
+        EnemySpawner zombieSpawner = new ZombieSpawner();
+        EnemySpawner skeletonSpawner = new SkeletonSpawner();
+
+        IEnemy zombie = zombieSpawner.SpawnEnemy(zombiePrefab, new Vector3(0, 0, 0));
+        IEnemy skeleton = skeletonSpawner.SpawnEnemy(skeletonPrefab, new Vector3(1, 0, 0));
+
+        zombie.Attack();
+        skeleton.Move();
+    }
+}

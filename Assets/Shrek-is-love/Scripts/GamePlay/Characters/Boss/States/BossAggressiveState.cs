@@ -106,11 +106,18 @@ public class BossAggressiveState : AbstractBossState
         for (int i = 0; i < _stateMachine.Boss.Settings.minionsToSpawn; i++)
         {
             Vector3 spawnPos = player.position + Random.insideUnitSphere * _stateMachine.Boss.Settings.spawnRadius;
-            GameObject.Instantiate(
+            spawnPos.y = 0;
+            GameObject minionObj = GameObject.Instantiate(
                 _stateMachine.Boss.Settings.minionPrefab,
                 spawnPos,
                 Quaternion.identity
             );
+            var agent = minionObj.GetComponent<UnityEngine.AI.NavMeshAgent>();
+            if (agent == null)
+            {
+                agent = minionObj.AddComponent<UnityEngine.AI.NavMeshAgent>();
+            }
+            agent.Warp(spawnPos);
         }
     }
 }
