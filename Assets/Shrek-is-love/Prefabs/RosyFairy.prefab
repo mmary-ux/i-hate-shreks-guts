@@ -2068,10 +2068,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3461eff5697fd0e43bdcaa7400a0c987, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spell: {fileID: 7612686244276287234, guid: 7c168937bc3b3f8448b537366391376e, type: 3}
-  player: {fileID: 0}
-  isSpawned: 0
-  existingTime: 1
+  spellPrefab: {fileID: 7914662257891743077, guid: 3c0de2607c58f0d4ebfd659a38b10aa7, type: 3}
+  spellSpeed: 30
+  cooldown: 3
+  spellLifetime: 2
+  damage: 15
 --- !u!114 &7622756120872698276
 MonoBehaviour:
   m_ObjectHideFlags: 0
