@@ -1,68 +1,47 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class MagicSpell : MonoBehaviour
+public class MagicSpell : MonoBehaviour, IMagicSpell
 {
-    [SerializeField] private GameObject spell;
-    [SerializeField] private GameObject player;
-    private GameObject spawnedSpell;
-    [SerializeField] private bool isSpawned = false;
-    private DamageDealer damageDealer;
-    [SerializeField] private float existingTime = 2f;
-    private float time;
+    [SerializeField] private GameObject spellPrefab;
+    [SerializeField] private float spellSpeed = 30f;
+    [SerializeField] private float cooldown = 3f;
+    [SerializeField] private float spellLifetime = 2f;
+    [SerializeField] private int damage = 15;
+
+    private Transform player;
+    private bool canCast = true;
 
     public void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-        time = existingTime;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    public void Enter()
+    public void CastSpell()
     {
-        if (!isSpawned) {
-            Vector3 SpawnLocation = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y, gameObject.transform.position.z);
-            spawnedSpell = Instantiate(spell, SpawnLocation, Quaternion.identity);
-            isSpawned = true;
-            FindObjectOfType<AudioManager>().Play("MagicWhoosh");
-        }
+        if (!canCast) return;
+
+        StartCoroutine(SpellCastCoroutine());
     }
-    void Update()
+
+    private IEnumerator SpellCastCoroutine()
     {
-        if (existingTime > 0 && isSpawned)
-        {
-            existingTime -= Time.deltaTime;
-            damageDealer = spawnedSpell.GetComponent<DamageDealer>();
-            Vector3 playerPosition = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z);
-            spawnedSpell.transform.LookAt(playerPosition);
+        canCast = false;
 
-            float distance = Vector3.Distance(player.transform.position, spawnedSpell.transform.position);
+        GameObject spell = Instantiate(spellPrefab, transform.position, Quaternion.identity);
+        spell.transform.LookAt(player.position);
 
-            if (distance > 2f)
-            {
-                spawnedSpell.transform.Translate(Vector3.forward * 30f * Time.deltaTime);
-            }
-            else
-            {
-                existingTime = time;
-                HitPlayer();
-            }
-        }
-        else
-        {
-            Destroy(spawnedSpell);
-            existingTime = time;
-            isSpawned = false;
-        }
+        var spellController = spell.AddComponent<SpellController>();
+        spellController.Init(spellSpeed, spellLifetime, damage, player);
 
+        FindObjectOfType<AudioManager>().Play("MagicWhoosh");
+
+        yield return new WaitForSeconds(cooldown);
+        canCast = true;
     }
 
-    private void HitPlayer()
-    {
-        isSpawned = false;
-        damageDealer.Attack();
-        Debug.Log("spell hit player");
-        Destroy(spawnedSpell);
-    }
+    public float Cooldown => cooldown;
 }

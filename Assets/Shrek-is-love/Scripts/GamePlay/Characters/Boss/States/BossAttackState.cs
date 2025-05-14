@@ -6,19 +6,19 @@ public class BossAttackState : AbstractBossState
 {
     private Transform player;
     private bool hasAttacked;
-    private MagicSpell magicSpell;
+    private IMagicSpell magicSpell;
 
     public BossAttackState(BossStateMachine stateMachine) : base(stateMachine)
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        magicSpell = _stateMachine.Boss.GetComponent<MagicSpell>();
+        magicSpell = _stateMachine.Boss.GetComponent<IMagicSpell>();
     }
 
     public override void Enter()
     {
         hasAttacked = false;
         _stateMachine.Boss.Animator.SetTrigger("Attack");
-        magicSpell.Enter();
+        magicSpell?.CastSpell();
     }
 
     public override void Exit()

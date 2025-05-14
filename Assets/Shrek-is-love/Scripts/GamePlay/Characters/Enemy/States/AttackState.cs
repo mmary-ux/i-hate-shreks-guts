@@ -7,14 +7,14 @@ public class AttackState : AbstractEnemyState
     private float attackCooldown;
     private bool isAttacking;
     private DamageDealer damageDealer;
-    private MagicSpell magicSpell;
+    private IMagicSpell magicSpell;
     private IWeapon weapon;
 
     public AttackState(EnemyStateMachine stateMachine) : base(stateMachine)
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         damageDealer = _stateMachine.Enemy.GetComponent<DamageDealer>();
-        magicSpell = _stateMachine.Enemy.GetComponent<MagicSpell>();
+        magicSpell = _stateMachine.Enemy.GetComponent<IMagicSpell>();
         weapon = _stateMachine.Enemy.GetComponent<IWeapon>();
     }
 
@@ -88,7 +88,7 @@ public class AttackState : AbstractEnemyState
         }
         else if (_stateMachine.Enemy.CompareTag("MagicEnemy"))
         {
-            magicSpell.Enter();
+            magicSpell?.CastSpell();
             isAttacking = false;
         }
     }
