@@ -45,7 +45,7 @@ public class BossAggressiveState : AbstractBossState
 
     public override void LogicUpdate()
     {
-        Debug.Log(_stateMachine.Boss.Mana.currentMana + " " + _stateMachine.Boss.Settings.manaForSpecialAttack);
+        // Debug.Log(_stateMachine.Boss.Mana.currentMana + " " + _stateMachine.Boss.Settings.manaForSpecialAttack);
         if (!_stateMachine.Boss.Vision.IsPlayerVisible(out Vector3 playerPosition))
         {
             DestroyForceField();

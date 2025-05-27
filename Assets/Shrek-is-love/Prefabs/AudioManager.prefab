@@ -143,3 +143,17 @@ MonoBehaviour:
     loop: 0
     mixer: {fileID: -8783311533240127663, guid: a4cf67e0e2ba60d40aef3419770a7f32, type: 2}
     source: {fileID: 0}
+  - name: VictoryTheme
+    clip: {fileID: 8300000, guid: 8e8f993fdc97b4485a85453865d85ebb, type: 3}
+    volume: 0.7
+    pitch: 1
+    loop: 0
+    mixer: {fileID: -4501024033380027213, guid: a4cf67e0e2ba60d40aef3419770a7f32, type: 2}
+    source: {fileID: 0}
+  - name: BossTheme
+    clip: {fileID: 8300000, guid: 62e09a34036a64cbe85f548d0cb25405, type: 3}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mixer: {fileID: -4501024033380027213, guid: a4cf67e0e2ba60d40aef3419770a7f32, type: 2}
+    source: {fileID: 0}

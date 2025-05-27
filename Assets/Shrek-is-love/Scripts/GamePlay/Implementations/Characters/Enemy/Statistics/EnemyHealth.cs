@@ -56,6 +56,7 @@ public class EnemyHealth : MonoBehaviour, IDataPersistence
         if (isDead) return;
         isDead = true;
         animator.SetTrigger("IsDead");
+        EventManager.Instance?.EnemyKilled();
         CallAfterDelay.Create(3f, () =>
         {
             gameObject.SetActive(false);

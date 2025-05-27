@@ -52,6 +52,8 @@ public class BossHealth : MonoBehaviour
         if (isDead) return;
         isDead = true;
         animator.SetTrigger("IsDead");
+        EventManager.Instance?.EnemyKilled();
+        FindObjectOfType<AudioManager>().OffBossAttackMusic();
         CallAfterDelay.Create(3f, () =>
         {
             gameObject.SetActive(false);
