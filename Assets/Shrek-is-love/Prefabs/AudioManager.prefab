@@ -115,3 +115,31 @@ MonoBehaviour:
     loop: 0
     mixer: {fileID: -8783311533240127663, guid: a4cf67e0e2ba60d40aef3419770a7f32, type: 2}
     source: {fileID: 0}
+  - name: WaterAttack
+    clip: {fileID: 8300000, guid: 233cb4094c0443a409c0a6a6c3e85ded, type: 3}
+    volume: 0.506
+    pitch: 1
+    loop: 0
+    mixer: {fileID: -8783311533240127663, guid: a4cf67e0e2ba60d40aef3419770a7f32, type: 2}
+    source: {fileID: 0}
+  - name: AirAttack
+    clip: {fileID: 8300000, guid: d104761f453c1fb48919de21c0b6bd9f, type: 3}
+    volume: 0.506
+    pitch: 1
+    loop: 0
+    mixer: {fileID: -8783311533240127663, guid: a4cf67e0e2ba60d40aef3419770a7f32, type: 2}
+    source: {fileID: 0}
+  - name: FireAttack
+    clip: {fileID: 8300000, guid: 7009210b718d8904b9b0ba89e3d6e5ee, type: 3}
+    volume: 0.438
+    pitch: 1
+    loop: 0
+    mixer: {fileID: -8783311533240127663, guid: a4cf67e0e2ba60d40aef3419770a7f32, type: 2}
+    source: {fileID: 0}
+  - name: EarthAttack
+    clip: {fileID: 8300000, guid: 5dcb8791d4bfb2b4cbaaece8e7711f7a, type: 3}
+    volume: 0.354
+    pitch: 1
+    loop: 0
+    mixer: {fileID: -8783311533240127663, guid: a4cf67e0e2ba60d40aef3419770a7f32, type: 2}
+    source: {fileID: 0}

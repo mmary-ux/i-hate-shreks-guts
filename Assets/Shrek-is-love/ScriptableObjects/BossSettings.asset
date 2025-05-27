@@ -23,7 +23,7 @@ MonoBehaviour:
   rotationSpeed: 5
   timeBetweenAttacks: 2
   manaForSpecialAttack: 10
-  forceFieldPrefab: {fileID: 8026119553716877287, guid: 465edf73a8ea50b4ab0a16e96bb005b1, type: 3}
+  forceFieldPrefab: {fileID: 1799019779132808453, guid: 1e540d660e5117e4b8c65668bb0b9a8d, type: 3}
   timeBetweenForcetFields: 10
   forceFieldDuration: 5
   minionPrefab: {fileID: 8332977944155024163, guid: 2466632dafd76e04b87ff05d0e2a7565, type: 3}
