@@ -56,7 +56,14 @@ public class EnemyHealth : MonoBehaviour, IDataPersistence
         if (isDead) return;
         isDead = true;
         animator.SetTrigger("IsDead");
-        EventManager.Instance?.EnemyKilled();
+        if (stateMachine.Enemy.CompareTag("BasicEnemy"))
+        {
+            EventManager.Instance?.EnemyKilled(EventManager.EnemyType.Regular);
+        }
+        else if (stateMachine.Enemy.CompareTag("MagicEnemy"))
+        {
+            EventManager.Instance?.EnemyKilled(EventManager.EnemyType.Fairy);
+        }
         CallAfterDelay.Create(3f, () =>
         {
             gameObject.SetActive(false);
