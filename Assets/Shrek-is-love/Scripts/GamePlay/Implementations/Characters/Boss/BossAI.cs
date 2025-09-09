@@ -100,5 +100,6 @@ public class BossAI : MonoBehaviour
     public void PerformAttack()
     {
         currentWeapon?.Attack();
+        EventManager.Instance?.BossFirstAttack();
     }
 }

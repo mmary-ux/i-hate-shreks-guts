@@ -8,7 +8,7 @@ public class BasicBossSpell : ElementalWeapon
     [SerializeField] private float spellLifetime = 2f;
     [SerializeField] private int damage = 15;
 
-    private const string SoundName = "MagicWhoosh";
+    private const string soundName = "MagicWhoosh";
 
     public void Init(GameObject prefab, float cooldown)
     {
@@ -32,7 +32,7 @@ public class BasicBossSpell : ElementalWeapon
         var controller = spell.AddComponent<SpellController>();
         controller.Init(spellSpeed, spellLifetime, damage, player);
 
-        FindObjectOfType<AudioManager>().Play(SoundName);
+        FindObjectOfType<AudioManager>().Play(soundName);
 
         yield return new WaitForSeconds(Cooldown);
         canAttack = true;

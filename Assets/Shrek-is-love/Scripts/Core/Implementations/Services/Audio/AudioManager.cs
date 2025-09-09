@@ -1,5 +1,6 @@
 using UnityEngine.Audio;
 using UnityEngine;
+using System.Collections;
 
 public class AudioManager : MonoBehaviour
 {
@@ -17,35 +18,77 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        EventManager.Instance.OnBossFirstAttack += OnBossAttackMusic;
+        EventManager.Instance.OnVictory += OnVictoryMusic;
+    }
+
+    private void OnBossAttackMusic()
+    {
+        StopPlaying("MainTheme");
+        Play("BossTheme");
+    }
+
+    public void OffBossAttackMusic()
+    {
+        EventManager.Instance.OnBossFirstAttack -= OnBossAttackMusic;
+        StopPlaying("BossTheme");
+        Play("MainTheme");
+    }
+
+    private void OnVictoryMusic()
+    {
+        StopPlaying("MainTheme");
+        PlayAndResume("VictoryTheme", "MainTheme");
+    }
+
     public void Play(string name)
     {
-        foreach(Sound sound in _sounds)
+        Sound sound = FindSound(name);
+        if (sound != null)
         {
-            if (sound.name == null)
-            {
-                return;
-            }
-
-            if (sound.name == name)
-            {
-                sound.source.Play();
-            }
+            sound.source.Play();
         }
     }
 
     public void StopPlaying(string name)
     {
+        Sound sound = FindSound(name);
+        if (sound != null)
+        {
+            sound.source.Stop();
+        }
+    }
+
+    private Sound FindSound(string name)
+    {
         foreach (Sound sound in _sounds)
         {
-            if (sound.name == null)
-            {
-                return;
-            }
-
             if (sound.name == name)
             {
-                sound.source.Stop();
+                return sound;
             }
         }
+        return null;
+    }
+
+    public void PlayAndResume(string tempTheme, string resumeTheme)
+    {
+        Sound tempSound = FindSound(tempTheme);
+        if (tempSound != null)
+        {
+            tempSound.source.Play();
+            if (!tempSound.source.loop)
+            {
+                StartCoroutine(WaitAndResume(tempSound.source.clip.length, resumeTheme));
+            }
+        }
+    }
+    
+    private IEnumerator WaitAndResume(float delay, string resumeTheme)
+    {
+        yield return new WaitForSeconds(delay);
+        Play(resumeTheme);
     }
 }
